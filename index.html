@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#c2491d">
 <title>Retraso a Marte</title>
-<meta name="description" content="Juego cooperativo IEEE AESS-UNAM para dos dispositivos: Control de Misión y Rover con retraso de señal.">
+<meta name="description" content="Juego cooperativo IEEE AESS-UNAM para dos dispositivos: Control de Misión y Rover con retraso y distorsión de señal.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
@@ -228,6 +228,53 @@ td.st { color: var(--gold); white-space: nowrap; }
 }
 @media (max-width: 380px) { h1 { font-size: 32px; } .tm .v { font-size: 18px; } .order .cmd { font-size: 25px; } .roles { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) { .order.flash, .rv.crash, .pop, .countdown div, .sm.rare, .map.storm::after, .flashbad { animation: none; } .rv { transition: none; } }
+
+/* ---------- v3: distorsión, antena, taladro ---------- */
+.seg.seg3 { grid-template-columns: repeat(3, 1fr); }
+.sig { display: inline-flex; align-items: flex-end; gap: 2px; height: 18px; vertical-align: middle; }
+.sig i { width: 5px; border-radius: 1px; background: var(--line); display: block; }
+.sig i:nth-child(1) { height: 20%; } .sig i:nth-child(2) { height: 40%; } .sig i:nth-child(3) { height: 60%; } .sig i:nth-child(4) { height: 80%; } .sig i:nth-child(5) { height: 100%; }
+.sig.b1 i.on, .sig.b2 i.on { background: var(--bad); } .sig.b3 i.on { background: var(--gold); } .sig.b4 i.on, .sig.b5 i.on { background: var(--ok); }
+.ohead { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.raw { font: 500 13px var(--mono); color: var(--muted); letter-spacing: .04em; word-break: break-all; }
+.raw b { color: var(--fg); font-weight: 600; }
+.order.noisy .cmd { animation: jitter .18s steps(2) infinite; text-shadow: 2px 0 var(--earth), -2px 0 var(--mars); }
+@keyframes jitter { 50% { transform: translate(1px, -1px); } }
+.order .acts.v3 { grid-template-columns: 1.3fr 1fr 1fr; }
+.order .acts.v3 button { font-size: 16px; }
+.ask { background: var(--earth-soft); color: var(--earth); border: 1px solid var(--earth); }
+.allbtn { justify-self: start; font: 600 13px var(--mono); letter-spacing: .06em; text-transform: uppercase; background: none; border: 1px dashed var(--mars); color: var(--mars); border-radius: 8px; padding: 7px 10px; cursor: pointer; }
+.tools { display: grid; gap: 12px; }
+.ant { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; }
+.meter { height: 12px; border-radius: 999px; background: var(--btn); overflow: hidden; border: 1px solid var(--line); }
+.meter > div { height: 100%; border-radius: 999px; transition: width .4s ease, background .4s; }
+.antbtn { min-height: 46px; padding: 0 14px; border-radius: 10px; border: 1px solid var(--earth); background: var(--earth-soft); color: var(--earth); font: 700 16px var(--display); letter-spacing: .04em; text-transform: uppercase; cursor: pointer; }
+.avisos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.avisos button { min-height: 44px; border-radius: 10px; border: 1px solid var(--earth); background: var(--panel); color: var(--earth); font: 600 14px var(--body); cursor: pointer; }
+.avisos button:active { background: var(--earth-soft); }
+.banner.warn { background: var(--bad-soft); color: var(--bad); }
+.banner.info { background: var(--earth-soft); color: var(--earth); }
+.log div.warn span:last-child { color: var(--bad); font-weight: 600; }
+.log div.okk span:last-child { color: var(--ok); }
+
+/* Modales de minijuegos */
+.modal { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; background: color-mix(in srgb, var(--bg) 70%, transparent); padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+.mcard { width: 100%; max-width: 420px; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px; display: grid; gap: 14px; box-shadow: 0 20px 60px rgba(0,0,0,.25); }
+.mcard h3 { margin: 0; font: 700 26px var(--display); }
+.mcard .note { font-size: 14px; }
+.dial { width: 100%; max-width: 340px; justify-self: center; }
+.dial svg { width: 100%; height: auto; display: block; }
+input[type=range].aim { width: 100%; height: 44px; accent-color: var(--earth); }
+.mbtns { display: grid; grid-template-columns: 2fr 1fr; gap: 8px; }
+.mbtns button { min-height: 54px; border-radius: 10px; font: 700 19px var(--display); letter-spacing: .05em; text-transform: uppercase; cursor: pointer; }
+.drillbar { position: relative; height: 54px; border-radius: 10px; background: var(--btn); border: 1px solid var(--line); overflow: hidden; touch-action: manipulation; }
+.drillbar .zone { position: absolute; top: 0; bottom: 0; background: color-mix(in srgb, var(--ok) 35%, transparent); border-left: 2px solid var(--ok); border-right: 2px solid var(--ok); }
+.drillbar .core { position: absolute; top: 0; bottom: 0; background: var(--ok); opacity: .6; }
+.drillbar .mark { position: absolute; top: -2px; bottom: -2px; width: 6px; margin-left: -3px; border-radius: 3px; background: var(--mars); box-shadow: 0 0 0 2px var(--panel); }
+.drillbar.miss { animation: shake .4s; }
+.mres { font: 700 20px var(--display); text-align: center; min-height: 26px; }
+.mres.ok { color: var(--ok); } .mres.bad { color: var(--bad); } .mres.gold { color: var(--gold); }
+
 </style>
 </head>
 <body>
@@ -261,7 +308,7 @@ td.st { color: var(--gold); white-space: nowrap; }
         </button>
         <button type="button" class="role rov" id="pickRover">
           <span class="ttl">Rover</span>
-          <span class="desc">Solo ves lo que te rodea. Recibes las órdenes tarde y decides si ejecutarlas.</span>
+          <span class="desc">Recibes órdenes tarde y a veces distorsionadas. Tú decides en cuáles confiar.</span>
           <span class="occ" id="occRover"><span class="dot"></span>Libre</span>
         </button>
       </div>
@@ -281,18 +328,19 @@ td.st { color: var(--gold); white-space: nowrap; }
     <div class="panel">
       <h2>Cómo se juega</h2>
       <div class="rules">
-        <div class="rule"><span class="ri">⏱</span><span><b>Las órdenes tardan en llegar.</b> Control manda órdenes y llegan a Marte segundos después. La posición del rover también vuelve con retraso.</span></div>
-        <div class="rule"><span class="ri">◆</span><span><b>Recolecten 3 muestras</b> antes de que se acabe el tiempo. Si el rover cae en un cráter, la misión se pierde.</span></div>
-        <div class="rule"><span class="ri" style="color:var(--gold)">◆</span><span><b>Hay una muestra rara</b> que el orbitador no ve. Solo el Rover puede encontrarla. Vale muchos puntos.</span></div>
-        <div class="rule"><span class="ri">◌</span><span><b>Cráteres ocultos.</b> Algunos solo los ve el Rover de cerca. Si el Rover rechaza una orden que lo iba a tirar a un cráter, gana puntos.</span></div>
-        <div class="rule"><span class="ri" style="color:var(--gold)">A</span><span><b>AutoNav.</b> El Rover tiene 2 cargas para moverse por su cuenta, sin esperar a la Tierra.</span></div>
-        <div class="rule"><span class="ri">☁</span><span><b>Tormenta de polvo.</b> En algún momento las cámaras del rover quedan ciegas unos segundos.</span></div>
-        <div class="rule"><span class="ri">≡</span><span><b>Planes.</b> Control puede armar una secuencia de varias órdenes y mandarla en una sola transmisión.</span></div>
+        <div class="rule"><span class="ri">⏱</span><span><b>Las órdenes tardan en llegar.</b> Control manda órdenes desde la Tierra y llegan a Marte segundos después. La posición del rover también vuelve con retraso.</span></div>
+        <div class="rule"><span class="ri">≋</span><span><b>La señal se distorsiona.</b> Algunas órdenes llegan cambiadas. Cada una trae su nivel de señal, pero una señal débil no siempre significa error, ni una fuerte que todo está bien. El Rover decide: <b>ejecutar</b>, <b>pedir que la repitan</b> o <b>rechazar</b>.</span></div>
+        <div class="rule"><span class="ri">📡</span><span><b>Alinea la antena.</b> Al moverse, la antena del rover se desalinea y llegan más errores. El Rover puede alinearla con un minijuego.</span></div>
+        <div class="rule"><span class="ri">⛏</span><span><b>Perfora para recolectar.</b> Cada muestra se recoge con un minijuego de taladro. Si das justo en el centro, ganas puntos extra.</span></div>
+        <div class="rule"><span class="ri">↩</span><span><b>Control ve el eco.</b> El rover reporta lo que recibió, así que Control puede descubrir una orden distorsionada y avisarle.</span></div>
+        <div class="rule"><span class="ri" style="color:var(--gold)">◆</span><span><b>3 muestras y una rara.</b> Recolecten las 3 antes de que se acabe el tiempo. La muestra rara solo la ve el Rover. Cuidado con los cráteres ocultos y la tormenta de polvo.</span></div>
       </div>
       <div class="pts">
         <span>Cada muestra</span><span>+100</span>
         <span>Muestra rara</span><span>+250</span>
-        <span>Rechazar una orden peligrosa</span><span>+50</span>
+        <span>Detectar una orden distorsionada</span><span>+30</span>
+        <span>Rechazar una orden que iba a un cráter</span><span>+50</span>
+        <span>Perforación perfecta</span><span>+25</span>
         <span>AutoNav sin usar (al ganar)</span><span>+40 c/u</span>
         <span>Segundos sobrantes (al ganar)</span><span>+3 c/u</span>
       </div>
@@ -360,27 +408,36 @@ td.st { color: var(--gold); white-space: nowrap; }
     r: { t: 'Gira der.', say: 'gira a la derecha', ic: '↻' },
     pick: { t: 'Recoger muestra', say: 'recoge la muestra', ic: '◆', wide: true },
   };
+  // En qué se puede convertir cada orden cuando la señal se distorsiona
+  const CORRUPT = { f1: ['f2', 'b1'], f2: ['f1', 'f3'], f3: ['f2', 'f1'], l: ['r'], r: ['l'], b1: ['f1'], pick: ['f1', 'l', 'r'] };
   const MSGS = {
-    crater: '¡Cráter cerca!', sample: 'Muestra a la vista', rare: '¡Muestra rara a la vista!', wait: 'Esperando órdenes', repeat: 'Repitan la orden',
-    ex: 'Ejecutó', rej: 'Rechazó', saved: 'Rechazó una orden peligrosa (+50)', auto: 'Usó AutoNav', edge: 'Llegó al borde del mapa',
-    none: 'No hay muestra aquí', got: 'Muestra recolectada (+100)', gotRare: '¡Muestra rara recolectada! (+250)',
-    storm: 'Tormenta de polvo: cámaras ciegas', stormEnd: 'La tormenta pasó',
+    crater: '¡Cráter cerca!', sample: 'Muestra a la vista', rare: '¡Muestra rara a la vista!', wait: 'Esperando órdenes',
+    rx: 'Recibió', ex: 'Ejecutó', rej: 'Rechazó', ask: 'Pide repetir', caught: 'Detectó una orden distorsionada (+30)',
+    saved: 'Rechazó una orden que iba a un cráter (+50)', auto: 'Usó AutoNav', edge: 'Llegó al borde del mapa',
+    none: 'No hay muestra aquí', got: 'Muestra recolectada (+100)', gotRare: '¡Muestra rara recolectada! (+250)', perfect: '¡Perforación perfecta! (+25)',
+    storm: 'Tormenta de polvo: cámaras ciegas', stormEnd: 'La tormenta pasó', aligned: 'Alineó la antena',
   };
   const QUICK = ['crater', 'sample', 'rare', 'wait'];
-  const LEVELS = [
-    { d: 3, n: 'Luna' }, { d: 8, n: 'Marte cerca' }, { d: 12, n: 'Marte' }, { d: 20, n: 'Marte lejos' },
-  ];
+  const AVISOS = { ignore: '¡Ignora la última orden!', ok: 'La última orden es correcta', align: 'Alinea tu antena', good: '¡Bien hecho, rover!' };
+  const LEVELS = [{ d: 3, n: 'Luna' }, { d: 8, n: 'Marte cerca' }, { d: 12, n: 'Marte' }, { d: 20, n: 'Marte lejos' }];
+  const NOISE = [{ v: 1, n: 'Baja', p: 0.12 }, { v: 2, n: 'Media', p: 0.25 }, { v: 3, n: 'Alta', p: 0.4 }];
   const DELAYS = LEVELS.map(l => l.d), DURS = [120, 180, 240, 300];
   const STORM_LEN = 15, AUTO_CHARGES = 2, PLAN_MAX = 5, COUNT_MS = 3200;
-  const FACT = '<b>¿Por qué el retraso?</b> Las señales de radio viajan a la velocidad de la luz y aun así tardan entre 4 y 24 minutos en llegar a Marte. Por eso Perseverance navega solo con su sistema AutoNav y los ingenieros le mandan planes completos para todo un día.';
+  const FACT = '<b>¿Por qué pasa esto?</b> Las señales a Marte tardan entre 4 y 24 minutos y pueden llegar con ruido. Por eso las misiones reales usan códigos de detección de errores, piden confirmación de cada orden y apuntan con cuidado sus antenas hacia la Tierra.';
 
   const now = () => performance.now();
   const fmt = (s) => { s = Math.max(0, Math.ceil(s)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
   const idx = (x, y) => y * N + x;
   const esc = (s) => String(s).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const levelName = (d) => (LEVELS.find(l => l.d === d) || { n: '' }).n;
+  const noiseOf = (v) => NOISE.find(n => n.v === v) || NOISE[1];
   const starsHTML = (n) => '<b>' + '★'.repeat(n) + '</b>' + '★'.repeat(3 - n);
+  const pickW = (pairs) => { let r = Math.random() * pairs.reduce((a, p) => a + p[1], 0); for (const [v, w] of pairs) { if ((r -= w) <= 0) return v; } return pairs[0][0]; };
+  const sigHTML = (b) => `<span class="sig b${b}" aria-label="Señal ${b} de 5">${[1, 2, 3, 4, 5].map(i => `<i class="${i <= b ? 'on' : ''}"></i>`).join('')}</span>`;
+  const glitch = (text, bars) => { const g = '▒#@%&?¿∆~*'; const p = Math.max(0, (5 - bars) * 0.14); return [...text].map(ch => ch !== ' ' && Math.random() < p ? g[Math.floor(Math.random() * g.length)] : ch).join(''); };
+  const antColor = (q) => q >= 0.7 ? 'var(--ok)' : q >= 0.45 ? 'var(--gold)' : 'var(--bad)';
 
   // ---------- Mapa reproducible a partir de una semilla ----------
   function rng(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
@@ -429,16 +486,18 @@ td.st { color: var(--gold); white-space: nowrap; }
       }
     } catch {}
   }
-  function boom() {
+  function noise(ms = 600, vol = 0.5, freq = 600) {
     if (!audio) return;
     try {
-      const len = audio.sampleRate * 0.6, buf = audio.createBuffer(1, len, audio.sampleRate), d = buf.getChannelData(0);
+      const len = Math.floor(audio.sampleRate * ms / 1000), buf = audio.createBuffer(1, len, audio.sampleRate), d = buf.getChannelData(0);
       for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.5);
       const s = audio.createBufferSource(), f = audio.createBiquadFilter(), g = audio.createGain();
-      f.type = 'lowpass'; f.frequency.value = 600; g.gain.value = 0.5;
+      f.type = 'lowpass'; f.frequency.value = freq; g.gain.value = vol;
       s.buffer = buf; s.connect(f).connect(g).connect(audio.destination); s.start();
     } catch {}
   }
+  const boom = () => noise(600, 0.5, 600);
+  const staticSound = () => noise(350, 0.18, 4000);
   function say(text) { try { const u = new SpeechSynthesisUtterance(text); u.lang = 'es-MX'; if (voice) u.voice = voice; speechSynthesis.speak(u); } catch {} }
   const reduced = () => window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   function confetti() {
@@ -465,6 +524,88 @@ td.st { color: var(--gold); white-space: nowrap; }
     await sleep(800); ov.remove(); cdBusy = false;
   }
 
+  // ---------- Minijuegos del Rover ----------
+  function openModal(html) {
+    const m = document.createElement('div'); m.className = 'modal'; m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true');
+    m.innerHTML = `<div class="mcard">${html}</div>`; document.body.appendChild(m);
+    return m;
+  }
+  // Devuelve la calidad de alineación (0–1) o null si se canceló
+  function antennaGame() {
+    let done = false, raf = 0, resolveFn;
+    const base = 40 + Math.random() * 100, amp = 14 + Math.random() * 10, speed = 0.9 + Math.random() * 0.6, t0 = now();
+    const m = openModal(`
+      <h3>Alinea la antena</h3>
+      <p class="note">Mueve el control para que la antena apunte a la Tierra. La Tierra se mueve un poco: fija la señal cuando la barra esté en verde.</p>
+      <div class="dial"><svg viewBox="0 0 200 118" aria-hidden="true">
+        <path d="M10 108 A90 90 0 0 1 190 108" fill="none" stroke="var(--line)" stroke-width="10" stroke-linecap="round"/>
+        <line data-n="needle" x1="100" y1="108" x2="100" y2="28" stroke="var(--mars)" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="100" cy="108" r="9" fill="var(--mars)"/>
+        <circle data-n="earth" cx="100" cy="18" r="10" fill="var(--earth)" stroke="var(--panel)" stroke-width="2"/>
+      </svg></div>
+      <input class="aim" type="range" min="0" max="180" value="90" step="1" aria-label="Dirección de la antena" data-n="aim">
+      <div class="row"><span class="k">Señal</span><span class="k" data-n="pct">0%</span></div>
+      <div class="meter"><div data-n="bar" style="width:0%"></div></div>
+      <div class="mbtns"><button type="button" class="go" data-n="fix">Fijar señal</button><button type="button" class="no" data-n="cancel">Cancelar</button></div>`);
+    const q = (k) => m.querySelector(`[data-n="${k}"]`);
+    const pt = (a, r) => [100 - r * Math.cos(a * Math.PI / 180), 108 - r * Math.sin(a * Math.PI / 180)];
+    let quality = 0;
+    function frame() {
+      const t = (now() - t0) / 1000, target = clamp(base + amp * Math.sin(t * speed), 5, 175), aim = +q('aim').value;
+      const [ex, ey] = pt(target, 90), [nx, ny] = pt(aim, 80);
+      q('earth').setAttribute('cx', ex); q('earth').setAttribute('cy', ey);
+      q('needle').setAttribute('x2', nx); q('needle').setAttribute('y2', ny);
+      quality = clamp(1 - Math.abs(aim - target) / 45, 0, 1);
+      q('bar').style.width = Math.round(quality * 100) + '%'; q('bar').style.background = antColor(quality);
+      q('pct').textContent = Math.round(quality * 100) + '%';
+      raf = requestAnimationFrame(frame);
+    }
+    raf = requestAnimationFrame(frame);
+    const finish = (v) => { if (done) return; done = true; cancelAnimationFrame(raf); m.remove(); resolveFn(v); };
+    q('fix').addEventListener('click', () => finish(Math.max(0.15, quality)));
+    q('cancel').addEventListener('click', () => finish(null));
+    const p = new Promise(r => resolveFn = r); p.close = () => finish(null);
+    return p;
+  }
+  // Devuelve {perfect} al perforar bien, o null si se dejó la muestra
+  function drillGame(isRare) {
+    let done = false, raf = 0, resolveFn, pos = 0, dir = 1, last = now(), cool = 0;
+    const zw = isRare ? 16 : 22, zx = 8 + Math.random() * (84 - zw), cw = 4, cx = zx + zw / 2 - cw / 2, speed = isRare ? 130 : 105;
+    const m = openModal(`
+      <h3>${isRare ? '✦ Perfora la muestra rara' : 'Perfora la muestra'}</h3>
+      <p class="note">Toca <b>Perforar</b> cuando la marca esté dentro de la zona verde. Justo en el centro vale puntos extra.</p>
+      <div class="drillbar" data-n="bar"><div class="zone" style="left:${zx}%;width:${zw}%"></div><div class="core" style="left:${cx}%;width:${cw}%"></div><div class="mark" data-n="mark"></div></div>
+      <div class="mres" data-n="res" aria-live="polite"></div>
+      <div class="mbtns"><button type="button" class="go" data-n="hit">Perforar</button><button type="button" class="no" data-n="cancel">Dejarla</button></div>`);
+    const q = (k) => m.querySelector(`[data-n="${k}"]`);
+    function frame(t) {
+      const dt = (t - last) / 1000; last = t;
+      if (t > cool) { pos += dir * speed * dt; if (pos > 100) { pos = 100; dir = -1; } if (pos < 0) { pos = 0; dir = 1; } }
+      q('mark').style.left = pos + '%';
+      raf = requestAnimationFrame(frame);
+    }
+    raf = requestAnimationFrame(frame);
+    const finish = (v) => { if (done) return; done = true; cancelAnimationFrame(raf); m.remove(); resolveFn(v); };
+    const hit = () => {
+      if (done || now() < cool) return;
+      if (pos >= zx && pos <= zx + zw) {
+        const perfect = pos >= cx - 0.6 && pos <= cx + cw + 0.6;
+        q('res').className = 'mres ' + (perfect ? 'gold' : 'ok'); q('res').textContent = perfect ? '¡Perfecto! +25' : '¡Muestra obtenida!';
+        beep(perfect ? [990, 1320, 1760] : [660, 990], 'triangle'); cool = now() + 9999;
+        setTimeout(() => finish({ perfect }), 700);
+      } else {
+        q('res').className = 'mres bad'; q('res').textContent = 'La broca resbaló. ¡Otra vez!';
+        const bar = q('bar'); bar.classList.remove('miss'); void bar.offsetWidth; bar.classList.add('miss');
+        noise(200, 0.25, 900); cool = now() + 500;
+      }
+    };
+    q('hit').addEventListener('click', hit);
+    q('bar').addEventListener('pointerdown', hit);
+    q('cancel').addEventListener('click', () => finish(null));
+    const p = new Promise(r => resolveFn = r); p.close = () => finish(null);
+    return p;
+  }
+
   // ---------- Piezas de interfaz compartidas ----------
   const ROVER_SVG = (color) => `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 L20 20 L12 16 L4 20 Z" fill="${color}" stroke="var(--panel)" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
   const SAMPLES_HTML = '<i></i><i></i><i></i><i class="rare" title="Muestra rara"></i>';
@@ -485,21 +626,22 @@ td.st { color: var(--gold); white-space: nowrap; }
     for (const el of have.values()) el.remove();
   }
   function paintSamples(el, st) {
-    const kids = [...el.children];
-    kids.forEach((i, k) => {
+    [...el.children].forEach((i, k) => {
       const on = k < 3 ? k < (st.s || []).length : !!st.rareGot;
       if (on && !i.classList.contains('on')) { i.classList.add('on', 'pop'); setTimeout(() => i.classList.remove('pop'), 600); }
       if (!on) i.classList.remove('on');
     });
   }
-  function board() { try { return JSON.parse(localStorage.getItem('retraso-marte-duo-board-v2') || '[]'); } catch { return []; } }
-  function saveBoard(b) { try { localStorage.setItem('retraso-marte-duo-board-v2', JSON.stringify(b)); } catch {} }
-  function scoreOf(st, dur, rmap) {
+  function board() { try { return JSON.parse(localStorage.getItem('retraso-marte-board-v3') || '[]'); } catch { return []; } }
+  function saveBoard(b) { try { localStorage.setItem('retraso-marte-board-v3', JSON.stringify(b)); } catch {} }
+  function scoreOf(st, dur) {
     const win = st.status === 'win';
     const parts = [
       ['Muestras', (st.s || []).length * 100],
       ['Muestra rara', st.rareGot ? 250 : 0],
-      ['Órdenes peligrosas rechazadas', (st.saved || 0) * 50],
+      ['Distorsiones detectadas', (st.caught || 0) * 30],
+      ['Cráteres evitados', (st.saved || 0) * 50],
+      ['Perforaciones perfectas', (st.perf || 0) * 25],
       ['AutoNav sin usar', win ? (st.auto || 0) * 40 : 0],
       ['Tiempo sobrante', win ? Math.max(0, dur - (st.tm || 0)) * 3 : 0],
     ];
@@ -517,14 +659,14 @@ td.st { color: var(--gold); white-space: nowrap; }
   class Control {
     constructor(link, root, opts = {}) {
       this.link = link; this.root = root; this.cd = opts.countdown !== false;
-      this.delay = 8; this.dur = 180; this.g = null; this.phase = 'setup';
-      this.cmds = []; this.n = 0; this.out = []; this.buf = []; this.inb = []; this.lastMsgN = 0; this.plan = null; this.pkN = 0;
+      this.delay = 8; this.dur = 180; this.noiseLv = 2; this.g = null; this.phase = 'setup';
+      this.cmds = []; this.av = []; this.n = 0; this.avN = 0; this.sent = {}; this.out = []; this.buf = []; this.inb = []; this.lastMsgN = 0; this.plan = null; this.pkN = 0;
       this.remote = null; this.shown = null; this.map = null;
       this.build(); this.publish();
       link.onOther(p => this.onRemote(p));
       this.raf = requestAnimationFrame(t => this.tick(t));
     }
-    publish() { this.link.setMine({ role: 'control', g: this.g, cmds: this.cmds.slice(-16) }); }
+    publish() { this.link.setMine({ role: 'control', g: this.g, cmds: this.cmds.slice(-16), av: this.av.slice(-6) }); }
     build() {
       const r = this.root, u = Math.random().toString(36).slice(2, 7);
       r.innerHTML = `
@@ -533,6 +675,7 @@ td.st { color: var(--gold); white-space: nowrap; }
         <div class="field"><label class="lbl" for="team-${u}">Nombre del equipo</label>
           <input type="text" id="team-${u}" data-r="team" maxlength="24" placeholder="Ej. Perseverance" autocomplete="off"></div>
         <div class="field"><span class="lbl">Destino (retraso de la señal)</span><div class="seg" data-r="delaySeg">${LEVELS.map(l => `<button type="button" data-v="${l.d}" aria-pressed="${l.d === 8}">${l.n}<small>${l.d} s</small></button>`).join('')}</div></div>
+        <div class="field"><span class="lbl">Interferencia (órdenes distorsionadas)</span><div class="seg seg3" data-r="noiseSeg">${NOISE.map(n => `<button type="button" data-v="${n.v}" aria-pressed="${n.v === 2}">${n.n}</button>`).join('')}</div></div>
         <div class="field"><span class="lbl">Duración</span><div class="seg" data-r="durSeg">${DURS.map(d => `<button type="button" data-v="${d}" aria-pressed="${d === 180}">${d / 60} min</button>`).join('')}</div></div>
         <p class="note" data-r="roverState"><span class="dot"></span>Esperando al Rover…</p>
         <button type="button" class="primary" data-r="start">Iniciar misión</button>
@@ -548,6 +691,8 @@ td.st { color: var(--gold); white-space: nowrap; }
         <div class="panel mapwrap">
           <div class="row" style="width:100%"><span class="k">Vista del orbitador</span><span class="k" data-r="age"></span></div>
           <div class="map" data-r="map"></div>
+          <div class="row" style="width:100%;max-width:420px"><span class="k">Antena del rover</span><span class="k" data-r="antPct">—</span></div>
+          <div class="meter" style="width:100%;max-width:420px"><div data-r="antBar" style="width:0%"></div></div>
           <div class="legend"><span><i style="background:var(--crater)"></i>Cráter</span><span><i style="background:var(--sample);border-radius:2px"></i>Muestra</span><span><i style="border:2px dashed var(--crater)"></i>Reportado por el rover</span><span><i style="background:var(--gold);border-radius:2px"></i>Rara</span></div>
         </div>
         <div class="panel">
@@ -558,6 +703,8 @@ td.st { color: var(--gold); white-space: nowrap; }
           </div>
           <div class="pad" data-r="pad"></div>
         </div>
+        <div class="panel"><span class="k">Avisos al rover (también tardan en llegar)</span>
+          <div class="avisos" data-r="avisos">${Object.entries(AVISOS).map(([k, t]) => `<button type="button" data-a="${k}">${t}</button>`).join('')}</div></div>
         <div class="panel"><div class="row"><span class="k">Bitácora</span><span class="k" data-r="teamTag"></span></div><div class="log" data-r="log"></div>
           <button type="button" class="ghost" data-r="abort">Terminar misión</button></div>
       </div>
@@ -574,6 +721,7 @@ td.st { color: var(--gold); white-space: nowrap; }
       const seg = (el, cb) => el.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; el.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b))); cb(+b.dataset.v); });
       seg(this.q('delaySeg'), v => this.delay = v);
       seg(this.q('durSeg'), v => this.dur = v);
+      seg(this.q('noiseSeg'), v => this.noiseLv = v);
       this.q('start').addEventListener('click', () => this.start());
       this.q('again').addEventListener('click', () => this.toSetup());
       let armed = 0;
@@ -588,6 +736,7 @@ td.st { color: var(--gold); white-space: nowrap; }
       });
       this.q('planSend').addEventListener('click', () => this.sendPlan());
       this.q('planClear').addEventListener('click', () => { if (this.plan) { this.plan = []; this.renderPlan(); } });
+      this.q('avisos').addEventListener('click', e => { const b = e.target.closest('button'); if (b) this.sendAviso(b.dataset.a); });
       const pad = this.q('pad');
       for (const [id, c] of Object.entries(CMDS)) {
         const b = document.createElement('button'); b.type = 'button'; b.className = 'cmdbtn' + (c.wide ? ' wide' : '');
@@ -619,40 +768,62 @@ td.st { color: var(--gold); white-space: nowrap; }
       this.buf.push({ t, st, key });
       for (const m of msgs) {
         if (typeof m.n !== 'number' || m.n <= this.lastMsgN || !MSGS[m.m]) continue;
-        this.lastMsgN = m.n; this.inb.push({ n: m.n, m: m.m, c: CMDS[m.c] ? m.c : null, t });
+        this.lastMsgN = m.n; this.inb.push({ n: m.n, m: m.m, c: CMDS[m.c] ? m.c : null, k: typeof m.k === 'number' ? m.k : null, t });
       }
     }
     start() {
       unlock();
       this.team = (this.q('team').value.trim() || 'Equipo sin nombre').slice(0, 24);
-      this.g = { id: Math.random().toString(36).slice(2, 9), seed: Math.floor(Math.random() * 2 ** 31), d: this.delay, dur: this.dur };
+      this.g = { id: Math.random().toString(36).slice(2, 9), seed: Math.floor(Math.random() * 2 ** 31), d: this.delay, dur: this.dur, nz: this.noiseLv };
       this.map = genMap(this.g.seed);
-      this.cmds = []; this.n = 0; this.out = []; this.buf = []; this.inb = []; this.lastMsgN = 0; this.plan = null;
+      this.cmds = []; this.av = []; this.n = 0; this.avN = 0; this.sent = {}; this.out = []; this.buf = []; this.inb = []; this.lastMsgN = 0; this.plan = null;
       this.q('planToggle').setAttribute('aria-pressed', 'false'); this.q('planbar').hidden = true;
-      this.shown = { x: START.x, y: START.y, dir: 0, s: [], rv: [], status: 'run', pts: 0 };
+      this.shown = { x: START.x, y: START.y, dir: 0, s: [], rv: [], status: 'run', pts: 0, ant: 0.85 };
       this.t0 = now() + COUNT_MS; this.phase = 'run';
       this.q('log').innerHTML = ''; this.q('teamTag').textContent = this.team; this.q('banner').innerHTML = ''; this.q('pts').textContent = '0';
-      this.q('lag').textContent = `${levelName(this.g.d)} · ${this.g.d} s de ida y ${this.g.d} s de regreso`;
+      this.q('lag').textContent = `${levelName(this.g.d)} · ${this.g.d} s de ida y ${this.g.d} s de regreso · interferencia ${noiseOf(this.g.nz).n.toLowerCase()}`;
       this.q('age').textContent = `Posición con ${this.g.d} s de retraso`;
       this.q('setup').hidden = true; this.q('result').hidden = true; this.q('run').hidden = false;
       paintSamples(this.q('samples'), this.shown);
       this.renderMap(); this.publish();
       if (this.cd) countdown(false);
     }
-    toSetup() { this.phase = 'setup'; this.g = null; this.cmds = []; this.publish(); this.q('team').value = ''; this.q('result').hidden = true; this.q('run').hidden = true; this.q('setup').hidden = false; }
+    toSetup() { this.phase = 'setup'; this.g = null; this.cmds = []; this.av = []; this.publish(); this.q('team').value = ''; this.q('result').hidden = true; this.q('run').hidden = true; this.q('setup').hidden = false; }
     send(list) {
       if (this.phase !== 'run' || now() < this.t0) return;
-      const t = now();
-      for (const c of list) { this.n++; this.cmds.push({ n: this.n, c }); }
+      const t = now(), nums = [];
+      for (const c of list) { this.n++; this.cmds.push({ n: this.n, c }); this.sent[this.n] = c; nums.push(this.n); }
       this.pkN++;
       this.out.push({ id: this.pkN, text: list.length > 1 ? `Plan ×${list.length}` : CMDS[list[0]].t, t });
       this.publish(); beep(list.length > 1 ? [520, 620, 720] : [520]);
-      this.log('out', list.length > 1 ? 'Plan: ' + list.map(c => CMDS[c].t).join(' → ') : CMDS[list[0]].t);
+      this.log('out', (list.length > 1 ? 'Plan: ' + list.map((c, i) => `#${nums[i]} ${CMDS[c].t}`).join(' → ') : `#${nums[0]} ${CMDS[list[0]].t}`));
     }
-    log(dir, text) {
-      const d = document.createElement('div'); if (dir === 'in') d.className = 'in';
+    sendAviso(a) {
+      if (this.phase !== 'run' || now() < this.t0 || !AVISOS[a]) return;
+      this.avN++; this.av.push({ n: this.avN, a }); this.pkN++;
+      this.out.push({ id: this.pkN, text: 'Aviso', t: now() });
+      this.publish(); beep([600, 500], 'triangle'); this.log('out', 'Aviso: ' + AVISOS[a]);
+    }
+    log(dir, text, cls) {
+      const d = document.createElement('div'); d.className = (dir === 'in' ? 'in ' : '') + (cls || '');
       d.innerHTML = `<span>${fmt(Math.max(0, (now() - this.t0) / 1000))}</span><span>${dir === 'in' ? '↓' : '↑'} ${esc(text)}</span>`;
       this.q('log').prepend(d);
+    }
+    receiveMsg(m) {
+      if (m.m === 'rx') {
+        const sent = m.k != null ? this.sent[m.k] : null;
+        if (sent && m.c && sent !== m.c) {
+          this.log('in', `⚠ #${m.k} llegó distorsionada: enviaste ${CMDS[sent].t}, recibió ${CMDS[m.c].t}`, 'warn');
+          beep([300, 250], 'sawtooth', .12); staticSound();
+          this.q('banner').innerHTML = `<div class="banner warn">≋ La orden #${m.k} llegó como «${esc(CMDS[m.c].t)}». Avísale al rover si hace falta.</div>`;
+        } else if (m.c) this.log('in', `✓ #${m.k} llegó bien: ${CMDS[m.c].t}`, 'okk');
+        return;
+      }
+      if (m.m === 'ask') { this.log('in', `↻ El rover pide repetir #${m.k} (recibió ${m.c ? CMDS[m.c].t : '?'})`, 'warn'); beep([700, 700], 'triangle'); return; }
+      this.log('in', MSGS[m.m] + (m.c && ['ex', 'rej', 'auto', 'caught', 'saved'].includes(m.m) ? ': ' + CMDS[m.c].t : ''));
+      if (['got', 'gotRare', 'saved', 'caught', 'perfect'].includes(m.m)) beep([880, 1175, 1568], 'triangle');
+      else if (m.m === 'storm') beep([200, 160], 'sawtooth', .1);
+      else beep(['ex', 'auto', 'aligned'].includes(m.m) ? [990] : [700, 520], 'triangle');
     }
     tick(t) {
       this.raf = requestAnimationFrame(tt => this.tick(tt));
@@ -665,20 +836,15 @@ td.st { color: var(--gold); white-space: nowrap; }
         const prev = this.shown; this.shown = applied.st;
         this.renderMap(); paintSamples(this.q('samples'), this.shown);
         this.q('pts').textContent = this.shown.pts | 0;
-        if (!!this.shown.storm !== !!(prev && prev.storm)) this.q('banner').innerHTML = this.shown.storm ? '<div class="banner storm">☁ Tormenta de polvo en Marte: el rover no ve nada.</div>' : '';
+        if (!!this.shown.storm !== !!(prev && prev.storm)) this.q('banner').innerHTML = this.shown.storm ? '<div class="banner storm">☁ Tormenta de polvo en Marte: el rover no ve nada y llegan más errores.</div>' : '';
       }
       const pk = [];
       this.out = this.out.filter(o => { const k = (t - o.t) / d; if (k >= 1) return false; pk.push({ key: 'o' + o.id, cls: 'out' + (o.id % 2 ? '' : ' alt'), text: `${o.text} · ${Math.ceil((1 - k) * this.g.d)}s`, k }); return true; });
       this.inb = this.inb.filter(m => {
         const k = (t - m.t) / d;
-        if (k >= 1) {
-          this.log('in', MSGS[m.m] + (m.c ? ': ' + CMDS[m.c].t : ''));
-          if (['got', 'gotRare', 'saved'].includes(m.m)) beep([880, 1175, 1568], 'triangle');
-          else if (m.m === 'storm') beep([200, 160], 'sawtooth', .1);
-          else beep(['ex', 'auto'].includes(m.m) ? [990] : [700, 520], 'triangle');
-          return false;
-        }
-        pk.push({ key: 'i' + m.n, cls: 'in' + (m.n % 2 ? '' : ' alt'), text: `${MSGS[m.m].replace(/ \(.*\)$/, '')} · ${Math.ceil((1 - k) * this.g.d)}s`, k: 1 - k }); return true;
+        if (k >= 1) { this.receiveMsg(m); return false; }
+        const label = m.m === 'rx' ? 'Eco' : MSGS[m.m].replace(/ \(.*\)$/, '');
+        pk.push({ key: 'i' + m.n, cls: 'in' + (m.n % 2 ? '' : ' alt'), text: `${label} · ${Math.ceil((1 - k) * this.g.d)}s`, k: 1 - k }); return true;
       });
       drawPackets(this.q('track'), pk);
       if (this.shown.status && this.shown.status !== 'run') return this.finish(this.shown);
@@ -698,6 +864,9 @@ td.st { color: var(--gold); white-space: nowrap; }
       }
       this.q('map').innerHTML = h;
       this.q('map').classList.toggle('storm', !!st.storm);
+      const a = typeof st.ant === 'number' ? clamp(st.ant, 0, 1) : 0.85;
+      this.q('antPct').textContent = Math.round(a * 100) + '% de alineación';
+      this.q('antBar').style.width = Math.round(a * 100) + '%'; this.q('antBar').style.background = antColor(a);
     }
     finish(st) {
       if (this.phase !== 'run') return;
@@ -705,9 +874,10 @@ td.st { color: var(--gold); white-space: nowrap; }
       const sc = scoreOf(st, this.g.dur), n = (st.s || []).length, tm = Math.min(this.g.dur, Math.round(st.tm || 0));
       let status, badge, txt;
       if (st.status === 'win') { status = 'ok'; badge = 'Misión exitosa'; txt = `${this.team} completó la misión en ${fmt(tm)} con ${this.g.d} s de retraso.`; }
-      else if (st.status === 'crash') { status = 'bad'; badge = 'Rover perdido'; txt = 'El rover cayó en un cráter. Cuando una orden llega tarde, ya no se puede corregir.'; }
+      else if (st.status === 'crash') { status = 'bad'; badge = 'Rover perdido'; txt = 'El rover cayó en un cráter. Cuando una orden llega tarde o distorsionada, ya no se puede corregir.'; }
       else if (st.status === 'lost') { status = 'bad'; badge = 'Sin señal'; txt = 'No llegó más telemetría del rover. Revisen que el otro dispositivo siga conectado a la misma mesa.'; }
       else { status = n ? 'part' : 'bad'; badge = n ? 'Éxito parcial' : 'Sin muestras'; txt = 'Se acabó el tiempo. Prueben a mandar planes de varias órdenes para avanzar más rápido.'; }
+      if (st.rxBad) txt += ` Llegaron ${st.rxBad} órdenes distorsionadas y el rover detectó ${st.caught || 0}.`;
       if (status === 'ok') { beep([784, 988, 1319, 1568]); confetti(); } else if (st.status === 'crash') { boom(); flashBad(); } else beep([440, 330]);
       const b = this.q('resBadge'); b.textContent = badge; b.className = 'badge ' + status;
       this.q('resStars').innerHTML = starsHTML(sc.stars);
@@ -726,12 +896,12 @@ td.st { color: var(--gold); white-space: nowrap; }
   class Rover {
     constructor(link, root, opts = {}) {
       this.link = link; this.root = root; this.voice = opts.voice !== false; this.cd = opts.countdown !== false;
-      this.g = null; this.st = null; this.msgs = []; this.mN = 0;
+      this.g = null; this.st = null; this.msgs = []; this.mN = 0; this.game = null;
       this.build(); this.publish();
       link.onOther(p => this.onRemote(p));
       this.raf = requestAnimationFrame(t => this.tick(t));
     }
-    publish() { this.link.setMine({ role: 'rover', g: this.g ? this.g.id : null, st: this.st, msgs: this.msgs.slice(-10) }); }
+    publish() { this.link.setMine({ role: 'rover', g: this.g ? this.g.id : null, st: this.st, msgs: this.msgs.slice(-14) }); }
     build() {
       this.root.innerHTML = `
       <div class="panel" data-r="wait"><h2>Rover en espera</h2><p class="note" data-r="waitTxt"><span class="dot"></span>Esperando a que Control de Misión inicie la misión…</p></div>
@@ -747,8 +917,11 @@ td.st { color: var(--gold); white-space: nowrap; }
           <div class="row" style="width:100%"><span class="k">Cámaras del rover</span><span class="k" data-r="vis">Ves 1 casilla alrededor</span></div>
           <div class="map" data-r="map"></div>
         </div>
-        <div class="panel">
-          <div class="row"><span class="k">AutoNav · moverte sin esperar a la Tierra</span><span class="charges" data-r="charges"></span></div>
+        <div class="panel tools">
+          <div class="row"><span class="k">Antena hacia la Tierra</span><span class="k" data-r="antPct">85%</span></div>
+          <div class="ant"><div class="meter"><div data-r="antBar"></div></div><button type="button" class="antbtn" data-r="antBtn">Alinear</button></div>
+          <p class="note" data-r="antNote">Con la antena desalineada llegan más órdenes distorsionadas.</p>
+          <div class="row"><span class="k">AutoNav · sin esperar a la Tierra</span><span class="charges" data-r="charges"></span></div>
           <div class="auto" data-r="auto">
             <button type="button" data-c="f1"><span class="ic">↑</span>Avanza</button>
             <button type="button" data-c="l"><span class="ic">↺</span>Izq.</button>
@@ -769,9 +942,11 @@ td.st { color: var(--gold); white-space: nowrap; }
       this.q('msgs').addEventListener('click', e => { const b = e.target.closest('button'); if (b && this.st && this.st.status === 'run') { this.sendMsg(b.dataset.m); beep([700]); } });
       this.q('inbox').addEventListener('click', e => {
         const b = e.target.closest('button'); if (!b || this.busy) return;
-        if (b.dataset.a === 'go') this.execute(false); else if (b.dataset.a === 'all') this.execute(true); else this.reject();
+        const a = b.dataset.a;
+        if (a === 'go') this.execute(false); else if (a === 'all') this.execute(true); else if (a === 'ask') this.decline(true); else if (a === 'no') this.decline(false);
       });
       this.q('auto').addEventListener('click', e => { const b = e.target.closest('button'); if (b) this.autonav(b.dataset.c); });
+      this.q('antBtn').addEventListener('click', () => this.alignAntenna());
     }
     onRemote(p) {
       const ctrl = p && p.role === 'control' ? p : null;
@@ -782,20 +957,26 @@ td.st { color: var(--gold); white-space: nowrap; }
       if (!this.g || ctrl.g.id !== this.g.id) this.newGame(ctrl.g);
       for (const c of Array.isArray(ctrl.cmds) ? ctrl.cmds : []) {
         if (typeof c.n !== 'number' || c.n <= this.seenN || !CMDS[c.c]) continue;
-        this.seenN = c.n; this.pending.push({ n: c.n, c: c.c, at: now() + this.g.d * 1000 });
+        this.seenN = c.n; this.pending.push({ kind: 'cmd', n: c.n, c: c.c, at: now() + this.g.d * 1000 });
+      }
+      for (const a of Array.isArray(ctrl.av) ? ctrl.av : []) {
+        if (typeof a.n !== 'number' || a.n <= this.seenAv || !AVISOS[a.a]) continue;
+        this.seenAv = a.n; this.pending.push({ kind: 'av', a: a.a, at: now() + this.g.d * 1000 });
       }
     }
     newGame(g) {
-      this.g = { id: g.id, seed: g.seed | 0, d: DELAYS.includes(g.d) ? g.d : 8, dur: DURS.includes(g.dur) ? g.dur : 180 };
+      this.closeGame();
+      this.g = { id: g.id, seed: g.seed | 0, d: DELAYS.includes(g.d) ? g.d : 8, dur: DURS.includes(g.dur) ? g.dur : 180, nz: noiseOf(g.nz).v };
       this.map = genMap(this.g.seed);
-      this.st = { x: START.x, y: START.y, dir: 0, s: [], rv: [], status: 'run', tm: 0, pts: 0, rareSeen: false, rareGot: false, auto: AUTO_CHARGES, saved: 0, storm: false };
-      this.seen = new Set(); this.pending = []; this.inbox = []; this.seenN = 0; this.msgs = []; this.mN = 0; this.busy = false;
+      this.st = { x: START.x, y: START.y, dir: 0, s: [], rv: [], status: 'run', tm: 0, pts: 0, rareSeen: false, rareGot: false, auto: AUTO_CHARGES, saved: 0, caught: 0, rxBad: 0, perf: 0, storm: false, ant: 0.85 };
+      this.seen = new Set(); this.pending = []; this.inbox = []; this.seenN = 0; this.seenAv = 0; this.msgs = []; this.mN = 0; this.busy = false;
       this.t0 = now() + COUNT_MS; this.stormAt = this.t0 + this.map.stormFrac * this.g.dur * 1000; this.stormDone = false;
       this.look();
       this.q('wait').hidden = true; this.q('result').hidden = true; this.q('run').hidden = false; this.q('banner').innerHTML = '';
-      this.renderAll(); this.publish();
+      this.renderAll(); this.renderInbox(); this.publish();
       if (this.cd) countdown(this.voice);
     }
+    closeGame() { if (this.game && this.game.close) this.game.close(); this.game = null; }
     radius() { return this.st.storm ? 0 : 1; }
     look() {
       const r = this.radius();
@@ -807,28 +988,54 @@ td.st { color: var(--gold); white-space: nowrap; }
       }
     }
     banner(kind, text) { this.q('banner').innerHTML = text ? `<div class="banner ${kind}">${esc(text)}</div>` : ''; }
-    sendMsg(m, c) { this.mN++; this.msgs.push(c ? { n: this.mN, m, c } : { n: this.mN, m }); this.publish(); }
+    sendMsg(m, c, k) { this.mN++; const o = { n: this.mN, m }; if (c) o.c = c; if (k != null) o.k = k; this.msgs.push(o); this.publish(); }
     calcPts() { this.st.pts = scoreOf(this.st, this.g.dur).total; }
+    drift(v) { this.st.ant = clamp(this.st.ant - v, 0.05, 1); }
+    // Probabilidad de que una orden llegue distorsionada
+    pBad() { const base = noiseOf(this.g.nz).p; return clamp(base * (0.35 + 1.3 * (1 - this.st.ant)) * (this.st.storm ? 1.6 : 1), 0.02, 0.85); }
+    receive(p) {
+      const bad = Math.random() < this.pBad();
+      const c = bad ? CORRUPT[p.c][Math.floor(Math.random() * CORRUPT[p.c].length)] : p.c;
+      const bars = bad ? pickW([[1, 30], [2, 35], [3, 22], [4, 13]]) : pickW([[5, 40 + this.st.ant * 20], [4, 30], [3, 15], [2, 10 + (1 - this.st.ant) * 15]]);
+      if (bad) this.st.rxBad++;
+      const item = { n: p.n, c, orig: p.c, bad, bars, raw: glitch(CMDS[c].t, bars) };
+      this.inbox.push(item); this.sendMsg('rx', c, p.n);
+      return item;
+    }
     tick(t) {
       this.raf = requestAnimationFrame(tt => this.tick(tt));
       if (!this.st || this.st.status !== 'run') return;
       const el = Math.max(0, (t - this.t0) / 1000), left = this.g.dur - el;
       this.q('clock').textContent = fmt(left); this.q('tmBox').classList.toggle('warn', left <= 30);
       if (!this.stormDone && !this.st.storm && t >= this.stormAt) {
-        this.st.storm = true; this.sendMsg('storm'); this.banner('storm', '☁ ¡Tormenta de polvo! Tus cámaras están ciegas.');
-        beep([200, 160, 120], 'sawtooth', .12); if (this.voice) say('Alerta: tormenta de polvo.');
+        this.st.storm = true; this.drift(0.3); this.sendMsg('storm'); this.banner('storm', '☁ ¡Tormenta de polvo! Tus cámaras están ciegas y la antena se desalineó.');
+        beep([200, 160, 120], 'sawtooth', .12); staticSound(); if (this.voice) say('Alerta: tormenta de polvo.');
         this.renderAll(); this.publish();
       }
       if (this.st.storm && t >= this.stormAt + STORM_LEN * 1000) {
         this.st.storm = false; this.stormDone = true; this.look(); this.sendMsg('stormEnd'); this.banner('', '');
         beep([660, 880], 'triangle'); this.renderAll(); this.publish();
       }
-      let arrived = null;
-      this.pending = this.pending.filter(p => { if (p.at <= t) { this.inbox.push(p); arrived = arrived || []; arrived.push(p); return false; } return true; });
-      if (arrived) {
-        beep([880, 1175]); if (navigator.vibrate) try { navigator.vibrate(120); } catch {}
-        if (this.voice) say(arrived.length > 1 ? `Plan recibido de ${arrived.length} órdenes. Primera: ${CMDS[arrived[0].c].say}` : 'Orden recibida: ' + CMDS[arrived[0].c].say);
-        this.renderInbox(true);
+      const arrived = [];
+      this.pending = this.pending.filter(p => { if (p.at <= t) { arrived.push(p); return false; } return true; });
+      if (arrived.length) {
+        const items = [];
+        for (const p of arrived) {
+          if (p.kind === 'av') {
+            this.banner('info', '📡 Aviso de la Tierra: ' + AVISOS[p.a]); beep([523, 784], 'triangle');
+            if (this.voice) say('Aviso de la Tierra: ' + AVISOS[p.a]);
+          } else items.push(this.receive(p));
+        }
+        if (items.length) {
+          const weak = items.some(i => i.bars <= 2);
+          beep([880, 1175]); if (weak) staticSound();
+          if (navigator.vibrate) try { navigator.vibrate(weak ? [60, 40, 60] : 120); } catch {}
+          if (this.voice) {
+            const pre = weak ? 'Señal débil. ' : '';
+            say(pre + (items.length > 1 ? `Plan recibido de ${items.length} órdenes. Primera: ${CMDS[items[0].c].say}` : 'Orden recibida: ' + CMDS[items[0].c].say));
+          }
+          this.renderInbox(true); this.publish();
+        }
       }
       if (left <= 0) this.end('time');
     }
@@ -836,10 +1043,12 @@ td.st { color: var(--gold); white-space: nowrap; }
       const box = this.q('inbox');
       if (!this.inbox.length) { box.innerHTML = '<div class="panel idle">Sin órdenes por ahora. Las órdenes de la Tierra aparecerán aquí cuando lleguen.</div>'; return; }
       const [first, ...rest] = this.inbox, dis = this.busy ? ' disabled' : '';
-      box.innerHTML = `<div class="order${flash ? ' flash' : ''}"><span class="k" style="color:var(--mars)">Orden recibida de la Tierra</span>
+      box.innerHTML = `<div class="order${flash ? ' flash' : ''}${first.bars <= 2 ? ' noisy' : ''}">
+        <div class="ohead"><span class="k" style="color:var(--mars)">Orden #${first.n} recibida</span><span class="k">Señal ${sigHTML(first.bars)}</span></div>
         <div class="cmd">${CMDS[first.c].ic} ${CMDS[first.c].t}</div>
-        <div class="acts${rest.length ? ' three' : ''}"><button type="button" class="go" data-a="go"${dis}>Ejecutar</button>${rest.length ? `<button type="button" class="go2" data-a="all"${dis}>Todo (${this.inbox.length})</button>` : ''}<button type="button" class="no" data-a="no"${dis}>Rechazar</button></div>
-        ${rest.length ? `<div class="queue">Después: ${rest.map(r => CMDS[r.c].t).join(' → ')}</div>` : ''}</div>`;
+        <div class="raw">Señal cruda: <b>${esc(first.raw)}</b></div>
+        <div class="acts v3"><button type="button" class="go" data-a="go"${dis}>Ejecutar</button><button type="button" class="ask" data-a="ask"${dis}>Repetir</button><button type="button" class="no" data-a="no"${dis}>Rechazar</button></div>
+        ${rest.length ? `<button type="button" class="allbtn" data-a="all"${dis}>Ejecutar todas (${this.inbox.length}) sin revisar</button><div class="queue">Después: ${rest.map(r => `${CMDS[r.c].t} ${'▮'.repeat(r.bars)}`).join(' → ')}</div>` : ''}</div>`;
     }
     wouldCrash(c) {
       if (!['f1', 'f2', 'f3', 'b1'].includes(c)) return false;
@@ -852,27 +1061,49 @@ td.st { color: var(--gold); white-space: nowrap; }
       }
       return false;
     }
-    reject() {
+    // ask=true: pedir que la repitan; ask=false: rechazar
+    decline(ask) {
       const o = this.inbox.shift(); if (!o) return;
-      if (this.wouldCrash(o.c)) { this.st.saved++; this.calcPts(); this.sendMsg('saved', o.c); this.banner('good', '✓ ¡Buen ojo! Esa orden te iba a tirar a un cráter. +50'); beep([880, 1320], 'triangle'); }
-      else { this.sendMsg('rej', o.c); beep([330]); }
+      const crash = this.wouldCrash(o.c);
+      if (o.bad) { this.st.caught++; this.sendMsg('caught', o.c, o.n); }
+      if (crash) { this.st.saved++; this.sendMsg('saved', o.c, o.n); }
+      if (ask) this.sendMsg('ask', o.c, o.n); else if (!o.bad && !crash) this.sendMsg('rej', o.c, o.n);
+      this.calcPts();
+      if (o.bad) { this.banner('good', `✓ ¡Bien visto! Era «${CMDS[o.orig].t}», no «${CMDS[o.c].t}». +30${crash ? ' y +50 por evitar el cráter' : ''}`); beep([880, 1320], 'triangle'); }
+      else if (crash) { this.banner('good', '✓ ¡Buen ojo! Esa orden te iba a tirar a un cráter. +50'); beep([880, 1320], 'triangle'); }
+      else { this.banner('info', ask ? 'Pediste que repitan la orden. Era correcta, pero ahora la Tierra sabe que dudaste.' : 'Esa orden era correcta. Rechazarla te costó tiempo.'); beep([330]); }
+      this.renderAll(); this.renderInbox(); this.publish();
+    }
+    async alignAntenna() {
+      if (this.busy || !this.st || this.st.status !== 'run') return;
+      this.busy = true; this.renderInbox(); this.renderAll();
+      this.game = antennaGame();
+      const qv = await this.game; this.game = null;
+      this.busy = false;
+      if (this.st.status !== 'run') return;
+      if (qv != null) { this.st.ant = clamp(qv, 0.15, 1); this.sendMsg('aligned'); beep(qv >= 0.7 ? [880, 1320] : [500], 'triangle'); }
       this.renderAll(); this.renderInbox(); this.publish();
     }
     async perform(c) {
       const st = this.st;
-      if (c === 'l' || c === 'r') { st.dir = (st.dir + (c === 'r' ? 1 : 3)) % 4; beep([420], 'sine', .1); this.renderMap(); return true; }
+      if (c === 'l' || c === 'r') { st.dir = (st.dir + (c === 'r' ? 1 : 3)) % 4; this.drift(0.07); beep([420], 'sine', .1); this.renderAll(); return true; }
       if (c === 'pick') {
-        const k = idx(st.x, st.y);
-        if (this.map.samples.includes(k) && !st.s.includes(k)) { st.s.push(k); this.calcPts(); this.sendMsg('got'); beep([660, 990, 1320]); if (this.voice) say('Muestra recolectada'); }
-        else if (k === this.map.rare && !st.rareGot) { st.rareGot = true; this.calcPts(); this.sendMsg('gotRare'); beep([990, 1320, 1760, 2093], 'triangle'); this.banner('good', '✦ ¡Muestra rara recolectada! +250'); if (this.voice) say('¡Muestra rara!'); }
-        else this.sendMsg('none');
-        this.renderAll(); return true;
+        const k = idx(st.x, st.y), isS = this.map.samples.includes(k) && !st.s.includes(k), isR = k === this.map.rare && !st.rareGot;
+        if (!isS && !isR) { this.sendMsg('none'); this.renderAll(); return true; }
+        this.game = drillGame(isR);
+        const res = await this.game; this.game = null;
+        if (st.status !== 'run') return false;
+        if (!res) { this.renderAll(); return true; }
+        if (res.perfect) { st.perf++; this.sendMsg('perfect'); }
+        if (isS) { st.s.push(k); this.sendMsg('got'); if (this.voice) say('Muestra recolectada'); }
+        else { st.rareGot = true; this.sendMsg('gotRare'); this.banner('good', '✦ ¡Muestra rara recolectada! +250'); if (this.voice) say('¡Muestra rara!'); }
+        beep([660, 990, 1320]); this.calcPts(); this.renderAll(); return true;
       }
       const steps = c === 'b1' ? 1 : +c[1], dir = c === 'b1' ? (st.dir + 2) % 4 : st.dir;
       for (let i = 0; i < steps; i++) {
         const nx = st.x + DIRS[dir][0], ny = st.y + DIRS[dir][1];
         if (nx < 0 || ny < 0 || nx >= N || ny >= N) { this.sendMsg('edge'); break; }
-        st.x = nx; st.y = ny; this.look(); this.renderMap(); this.publish();
+        st.x = nx; st.y = ny; this.drift(0.05); this.look(); this.renderAll(); this.publish();
         const k = idx(nx, ny);
         if (this.map.craters.includes(k) || this.map.hidden.includes(k)) { this.end('crash'); return false; }
         beep([300], 'sine', .12); await sleep(320);
@@ -887,7 +1118,8 @@ td.st { color: var(--gold); white-space: nowrap; }
         const o = this.inbox[0];
         const ok = await this.perform(o.c);
         if (!ok) { this.busy = false; return; }
-        this.inbox.shift(); this.sendMsg('ex', o.c);
+        this.inbox.shift(); this.sendMsg('ex', o.c, o.n);
+        if (o.bad) this.banner('warn', `≋ Esa orden venía distorsionada: la Tierra mandó «${CMDS[o.orig].t}».`);
         if (this.st.s.length >= 3) break;
         if (all && this.inbox.length) await sleep(250);
       } while (all && this.inbox.length && this.st.status === 'run');
@@ -906,6 +1138,7 @@ td.st { color: var(--gold); white-space: nowrap; }
     }
     end(why) {
       if (this.st.status !== 'run') return;
+      this.closeGame();
       this.st.status = why; this.st.storm = false; this.st.tm = Math.min(this.g.dur, Math.round(Math.max(0, now() - this.t0) / 1000));
       this.calcPts(); this.pending = []; this.inbox = []; this.publish();
       try { speechSynthesis.cancel(); } catch {}
@@ -915,13 +1148,14 @@ td.st { color: var(--gold); white-space: nowrap; }
         crash: ['bad', 'Caíste en un cráter', 'La Tierra todavía no lo sabe: la noticia tarda en llegar.'],
         time: [sc.stars ? 'part' : 'bad', 'Tiempo agotado', 'Se acabó el tiempo de la misión.'],
       }[why];
+      const stats = this.st.rxBad ? ` Te llegaron ${this.st.rxBad} órdenes distorsionadas y detectaste ${this.st.caught}.` : ' Esta vez no llegó ninguna orden distorsionada.';
       if (why === 'win') { beep([784, 988, 1319, 1568]); confetti(); if (this.voice) say('Misión cumplida.'); }
       else if (why === 'crash') { boom(); flashBad(); if (this.voice) say('Rover perdido.'); this.renderMap(true); }
       else { beep([440, 330]); if (this.voice) say('Fin de la misión.'); }
       setTimeout(() => {
         const b = this.q('resBadge'); b.textContent = R[1]; b.className = 'badge ' + R[0];
         this.q('resStars').innerHTML = starsHTML(sc.stars);
-        this.q('resBig').textContent = sc.total + ' pts'; this.q('resTxt').textContent = R[2];
+        this.q('resBig').textContent = sc.total + ' pts'; this.q('resTxt').textContent = R[2] + stats;
         this.q('run').hidden = true; this.q('result').hidden = false;
       }, why === 'crash' ? 1000 : 400);
     }
@@ -931,6 +1165,11 @@ td.st { color: var(--gold); white-space: nowrap; }
       this.q('pts').textContent = this.st.pts | 0;
       this.q('charges').innerHTML = Array.from({ length: AUTO_CHARGES }, (_, i) => `<i class="${i < this.st.auto ? 'on' : ''}"></i>`).join('');
       this.q('auto').querySelectorAll('button').forEach(b => b.disabled = this.st.auto <= 0 || this.busy);
+      this.q('antBtn').disabled = this.busy;
+      const a = this.st.ant;
+      this.q('antPct').textContent = Math.round(a * 100) + '%';
+      this.q('antBar').style.width = Math.round(a * 100) + '%'; this.q('antBar').style.background = antColor(a);
+      this.q('antNote').textContent = a < 0.45 ? '⚠ Antena muy desalineada: llegarán muchas órdenes con errores.' : a < 0.7 ? 'La antena se está desalineando. Considera alinearla.' : 'Antena bien alineada.';
       this.q('vis').textContent = this.st.storm ? 'Cámaras ciegas' : 'Ves 1 casilla alrededor';
     }
     renderMap(crash) {
@@ -950,7 +1189,7 @@ td.st { color: var(--gold); white-space: nowrap; }
       this.q('map').innerHTML = h;
       this.q('map').classList.toggle('storm', !!st.storm);
     }
-    destroy() { cancelAnimationFrame(this.raf); }
+    destroy() { this.closeGame(); cancelAnimationFrame(this.raf); }
   }
 
   // =====================================================================
@@ -966,7 +1205,7 @@ td.st { color: var(--gold); white-space: nowrap; }
   }
 
   // Conexión entre dispositivos: MQTT sobre WebSocket en un servidor público.
-  const NS = 'aess-unam/retraso-marte/v2/k7q3';
+  const NS = 'aess-unam/retraso-marte/v3/k7q3';
   const params = new URLSearchParams(location.search);
   const BROKERS = params.get('broker') ? [params.get('broker'), params.get('broker')] : ['wss://broker.emqx.io:8084/mqtt', 'wss://broker.hivemq.com:8884/mqtt'];
   const CID = 'rm-' + Math.random().toString(36).slice(2, 10);
@@ -1099,7 +1338,9 @@ td.st { color: var(--gold); white-space: nowrap; }
     armed = 0; saveBoard([]); renderBoard(); $('clearBtn').textContent = 'Borrar tablero';
   });
   renderBoard(); paintSrv(); connectLobby();
+  if (params.has('debug')) window.__rm = { drillGame, antennaGame };
 })();
+
 </script>
 </body>
 </html>
